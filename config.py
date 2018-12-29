@@ -3,7 +3,7 @@ import os
 
 class Config:
 
-    # SQLALCHEMY_DATABASE_URI = 'mysql://flask_db_user:flask@localhost/flask_blog'
+    SQLALCHEMY_DATABASE_URI = 'mysql://flaskuser:flaskuserpw@localhost/flaskblog_db'
     SECRET_KEY = os.environ.get('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = True
