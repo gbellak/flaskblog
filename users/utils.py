@@ -1,14 +1,14 @@
 from flaskblog import mail
 from flask import url_for, current_app
 from flask_login import current_user
-import secrets
+from os import urandom
 import os
 from PIL import Image
 from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
 
 def save_picture(form_picture):
-    random_hex = secrets.token_hex(8)
+    random_hex = urandom(8).hex()
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex+f_ext
     picture_path = os.path.join(current_app.root_path,
