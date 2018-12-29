@@ -7,6 +7,7 @@ from PIL import Image
 from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer
 
+
 def save_picture(form_picture):
     random_hex = urandom(8).hex()
     _, f_ext = os.path.splitext(form_picture.filename)
@@ -59,15 +60,15 @@ If you did not sign up with Flask Blog, then simply ignor this email.
 
 
 def generate_email_confirmation_token(email):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
+    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt=current_app.config['SECURITY_PASSWORD_SALT'])
 
 def confirm_email_token(token, expiration=3600):
-    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
     try:
         email = serializer.loads(
             token,
-            salt=app.config['SECURITY_PASSWORD_SALT'],
+            salt=current_app.config['SECURITY_PASSWORD_SALT'],
             max_age=expiration
         )
     except:
