@@ -53,4 +53,4 @@ class Post(db.Model):
     def __repr__(self):
         title = self.title
         date_posted = self.date_posted
-        return f"Post('{}', '{}')".format(title,date_posted)
+        return "Post('{}', '{}')".format(title,date_posted)
