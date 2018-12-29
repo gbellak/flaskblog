@@ -9,7 +9,7 @@ def check_confirmed(func):
     def decorated_function(*args, **kwargs):
         if current_user.is_anonymous:
             flash('Please login to access page', 'info')
-            redirect(url_for('main.home'))
+            return redirect(url_for('main.home'))
         elif current_user.confirmed is False:
             flash('Please validate your account!', 'danger')
             return redirect(url_for('users.account'))
