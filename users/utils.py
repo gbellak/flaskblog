@@ -59,15 +59,15 @@ If you did not sign up with Flask Blog, then simply ignor this email.
 
 
 def generate_email_confirmation_token(email):
-    serializer = URLSafeTimedSerializer(os.environ.get('SECRET_KEY'))
-    return serializer.dumps(email, salt=os.environ.get('SECURITY_PASSWORD_SALT'))
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
 
 def confirm_email_token(token, expiration=3600):
-    serializer = URLSafeTimedSerializer(os.environ.get('SECRET_KEY'))
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     try:
         email = serializer.loads(
             token,
-            salt=os.environ.get('SECURITY_PASSWORD_SALT'),
+            salt=app.config['SECURITY_PASSWORD_SALT'],
             max_age=expiration
         )
     except:
