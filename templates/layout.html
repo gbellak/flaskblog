@@ -33,6 +33,9 @@
         </div>
         <!-- Navbar Right Side -->
         <div class="navbar-nav">
+          {% if current_user.is_admin %}
+              <a class="nav-item nav-link" href="{{url_for('admin.home')}}">Admin</a>
+          {% endif %}
           {% if current_user.is_authenticated %}
 
               <p class= "nav-item nav-link">Hello {{current_user.username}} </p>
