@@ -109,7 +109,8 @@ def checkout(order_id):
 def thankyou(order_id):
     if order_id == session['kco_order_id']:
         try:
-            response = requests.get(KLARNA_API_URL+'/checkout/v3/orders/'+ order_id, auth=(KLARNA_API_USER,KLARNA_API_PASSWORD))
+            response = requests.get(current_app.config['KLARNA_API_URL']+'/checkout/v3/orders/'+ order_id, 
+                auth=(current_app.config['KLARNA_API_USER'],current_app.config['KLARNA_API_PASSWORD']))
             json_data = json.loads(response.text)
             return render_template('kco_thankyou.html', title='KlarnaKCO Confirm', snippet=json_data['html_snippet'])
 
