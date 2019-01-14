@@ -107,7 +107,7 @@ def checkout(order_id):
 @login_required
 @check_confirmed
 def thankyou(order_id):
-    if order_id.equals(session['kco_order_id']):
+    if order_id == session['kco_order_id']:
         try:
             response = requests.get(KLARNA_API_URL+'/checkout/v3/orders/'+ order_id, auth=(KLARNA_API_USER,KLARNA_API_PASSWORD))
             json_data = json.loads(response.text)
