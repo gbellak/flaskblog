@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_login import login_required
 from flask import render_template, url_for, flash, redirect, current_app, session
 from flaskblog.decorators import check_confirmed
-from flaskblog.klarnapay.forms import CheckoutForm
+from flaskblog.klarnakco.forms import KCOCheckoutForm
 import requests, json
 
 
@@ -41,10 +41,10 @@ checkout_order = {
    }
  ],
  "merchant_urls": {
-   "terms": "http://merchant.com/tac.php",
-   "checkout": "http://merchant.com/checkout.php?sid={checkout.order.id}",
-   "confirmation": "http://merchant.com/thankyou.php?sid={checkout.order.id}",
-   "push": "http://localhost/kco/push.php?checkout_uri={checkout.order.id}"
+   "terms": "https://flaskblog.duckdns.org/klarnakco/terms",
+   "checkout": "https://flaskblog.duckdns.org/klarnakco/checkout/{checkout.order.id}",
+   "confirmation": "https://flaskblog.duckdns.org/klarnakco/confirmation/{checkout.order.id}",
+   "push": "https://flaskblog.duckdns.org/klarnakco/push/{checkout.order.id}"
  },
  "shipping_options": [
    {
@@ -71,23 +71,23 @@ checkout_order = {
 
 
 
-@klarnakco.route('/klarnakco/checkout', methods=['GET', 'POST'])
+@klarnakco.route('/klarnakco/', methods=['GET', 'POST'])
 @login_required
 @check_confirmed
-def checkout2():
+def checkout_initiate():
+    form = KCOCheckoutForm()
+    if form.validate_on_submit():
+        flash('You will be redirected to KCO checkout', 'success')
+        try:
+            response = requests.post(current_app.config['KLARNA_KCO_API_URL'], 
+                auth=(current_app.config['KLARNA_API_USER'], current_app.config['KLARNA_API_PASSWORD']), json=checkout_order)
+            json_data = json.loads(response.text)
+            return render_template('kco_checkout2.html', title='KlarnaKCO', snippet=json_data['html_snippet'])
 
-    try:
-        response = requests.post(current_app.config['KLARNA_API_URL'], 
-            auth=(current_app.config['KLARNA_API_USER'], current_app.config['KLARNA_API_PASSWORD']), json=payload)
-        json_data = json.loads(response.text)
-        flash(json_data,'warning')
-        session['klarna_session'] = json_data['session_id']
-        session['klarna_token'] = json_data['client_token']
-        return redirect(url_for('klarnapay.payment'))
-    except Exception as e:
+        except Exception as e:
             flash('Could not connect to payment portal \n '+ str(e), 'danger')
 
-    return render_template('checkout.html', title='KlarnaPay', form=form, legend='Payment with Klarna', purchase = str(payload))
+    return render_template('kco_checkout.html', title='KlarnaPay', form=form, legend='Payment with Klarna')
 
 
 @klarnakco.route('/klarnakco/terms')
@@ -95,17 +95,21 @@ def terms():
 	return render_template('kco_terms.html', title='KlarnaCheckout- Terms', legend='Payment T&C with Klarna Checkout')
 
 
-@klarnakco.route('/klarnakco/checkout/<int:order_id>')
+@klarnakco.route('/klarnakco/checkout/<order_id>')
 @login_required
 @check_confirmed
 def checkout(order_id):
 	checkout_order['merchant_urls']['terms'] = url_for('klarnakco.checkout', order_id = order_id)
 	return render_template('kco_checkout.html', title='KlarnaCheckout', legend='Main Klarna Checkout Page', order=order_id)
 
-@klarnakco.route('/klarnakco/confirmation/<int:order_id>')
+@klarnakco.route('/klarnakco/confirmation/<order_id>')
+@login_required
+@check_confirmed
 def thankyou(order_id):
 	return render_template('kco_thankyou.html', title='KlarnaCheckout- Terms', legend='Thank you for your purchase with Klarna Checkout', order=order_id)
 
-@klarnakco.route('/klarnakco/push/<int:order_id>', methods=['GET', 'POST'])
+@klarnakco.route('/klarnakco/push/<order_id>', methods=['GET', 'POST'])
+@login_required
+@check_confirmed
 def push(order_id):
 	return render_template('kco_push.html', title='KlarnaCheckout- Terms', legend='Order Confirmation', order=order_id)
