@@ -40,7 +40,7 @@ def checkout():
         flash('You will be redirected to payments', 'success')
         try:
             response = requests.post(current_app.config['KLARNA_API_URL'], 
-                auth=(current_app.config['KLARNA_API_USER'], current_app.config['KLARNA_API_PASSWORD']), json=payload)
+                auth=(current_app.config['KLARNA_API_USER']+'/payments/v1/sessions', current_app.config['KLARNA_API_PASSWORD']), json=payload)
             json_data = json.loads(response.text)
             flash(json_data,'warning')
             session['klarna_session'] = json_data['session_id']
