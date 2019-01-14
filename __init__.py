@@ -29,11 +29,15 @@ def create_app(config_class=Config):
     from flaskblog.main.routes import main
     from flaskblog.errors.handlers import errors
     from flaskblog.admin.routes import admin
+    from flaskblog.klarnapay.routes import klarnapay
+    from flaskblog.klarnakco.routes import klarnakco
 
     app.register_blueprint(users)
     app.register_blueprint(posts)
     app.register_blueprint(main)
     app.register_blueprint(errors)
     app.register_blueprint(admin)
+    app.register_blueprint(klarnapay)
+    app.register_blueprint(klarnakco)
 
     return app

@@ -32,3 +32,8 @@ class ConfigFU(Config):
     USER_ENABLE_USERNAME = True    # Disable username authentication
     USER_EMAIL_SENDER_NAME = USER_APP_NAME
     USER_EMAIL_SENDER_EMAIL = '"Gabor Admin" <gbcode62@gmail.com>'
+
+    KLARNA_API_USER = 'PK06103_a3a06ab734f4'
+    KLARNA_API_PASSWORD = 'x26cuCfXeSW9CwWq'
+    KLARNA_API_URL = 'https://api.playground.klarna.com/payments/v1/sessions'
+

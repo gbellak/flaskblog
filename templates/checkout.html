@@ -1,0 +1,23 @@
+{%extends "layout.html"%}
+{%block content%}
+
+      <div class="content-section">
+        <form  action="" method="POST">
+          {{ form.hidden_tag() }}
+
+          {{ purchase }}
+          <fieldset class="form-group" >
+            
+          </fieldset>
+
+
+
+          <div class="form-group">
+            {{form.submit(class="btn btn-outline-info")}}
+          </div>
+        </form>
+      
+      </div>
+
+
+{%endblock content%}

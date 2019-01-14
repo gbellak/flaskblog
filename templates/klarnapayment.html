@@ -1,0 +1,42 @@
+{%extends "layout.html"%}
+{%block content%}
+
+      <div class="content-section">
+        <div id="klarna_container"></div>
+      
+      </div>
+
+
+{%endblock content%}
+{% block javascript %}
+<script>
+  window.klarnaAsyncCallback = function () {
+
+    // This is where you start calling Klarna's JS SDK functions
+    // 
+    // Klarna.Payments.init({....})
+  Klarna.Payments.init({
+          client_token: '{{session['klarna_token']}}'
+    })
+
+  Klarna.Payments.load({
+    container: '#klarna_container',
+    payment_method_category: 'pay_later'
+  }, function (res) {
+    console.debug(res);
+})
+
+  {
+   show_form: true
+}
+  };
+</script>
+<script src="https://x.klarnacdn.net/kp/lib/v1/api.js" async></script>
+
+
+
+
+
+
+{% endblock %}
+
