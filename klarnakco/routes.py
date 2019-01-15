@@ -4,7 +4,7 @@ from flask import render_template, url_for, flash, redirect, current_app, sessio
 from flaskblog.decorators import check_confirmed
 from flaskblog.klarnakco.forms import KCOCheckoutForm
 import requests, json
-
+from flaskblog.models import Post
 
 klarnakco = Blueprint('klarnakco', __name__)
 
@@ -119,6 +119,21 @@ def thankyou(order_id):
             flash('Could not conclude payment  '+ str(e), 'danger')
     return render_template('kco_thankyou.html', title='KlarnaCheckout- Terms', legend='Thank you for your purchase with Klarna Checkout', order=order_id)
 
-@klarnakco.route('/klarnakco/push/<order_id>', methods=['GET', 'POST'])
+@klarnakco.route('/klarnakco/push/<order_id>', methods=['POST'])
 def push(order_id):
+    flash('Klarna confirms order: '+ order_id, 'success')
+    try:
+            response = requests.get(current_app.config['KLARNA_API_URL']+'/ordermanagement/v1/orders/'+ order_id, 
+                auth=(current_app.config['KLARNA_API_USER'],current_app.config['KLARNA_API_PASSWORD']))
+            json_data = json.loads(response.text)
+
+            post = Post(title='Order Received: '+ order_id, content=json_data.dumps(js, indent =2, sort_keys = True), author=1)
+            db.session.add(post)
+            db.session.commit()
+
+    except Exception as e:
+            flash('Could not verify order: '+order_id + str(e), 'danger')
+
+
+
     return render_template('kco_push.html', title='KlarnaCheckout- Terms', legend='Order Confirmation', order=order_id)
