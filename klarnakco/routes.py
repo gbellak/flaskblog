@@ -119,7 +119,7 @@ def thankyou(order_id):
             flash('Could not conclude payment  '+ str(e), 'danger')
     return render_template('kco_thankyou.html', title='KlarnaCheckout- Terms', legend='Thank you for your purchase with Klarna Checkout', order=order_id)
 
-@klarnakco.route('/klarnakco/push/<order_id>', methods=['POST'])
+@klarnakco.route('/klarnakco/push/<order_id>', methods=['GET', 'POST'])
 def push(order_id):
     flash('Klarna confirms order: '+ order_id, 'success')
     try:
@@ -133,7 +133,5 @@ def push(order_id):
 
     except Exception as e:
             flash('Could not verify order: '+order_id + str(e), 'danger')
-
-
 
     return render_template('kco_push.html', title='KlarnaCheckout- Terms', legend='Order Confirmation', order=order_id)
