@@ -120,7 +120,5 @@ def thankyou(order_id):
     return render_template('kco_thankyou.html', title='KlarnaCheckout- Terms', legend='Thank you for your purchase with Klarna Checkout', order=order_id)
 
 @klarnakco.route('/klarnakco/push/<order_id>', methods=['GET', 'POST'])
-@login_required
-@check_confirmed
 def push(order_id):
     return render_template('kco_push.html', title='KlarnaCheckout- Terms', legend='Order Confirmation', order=order_id)
