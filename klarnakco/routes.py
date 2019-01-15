@@ -127,7 +127,7 @@ def push(order_id):
                 auth=(current_app.config['KLARNA_API_USER'],current_app.config['KLARNA_API_PASSWORD']))
             json_data = json.loads(response.text)
 
-            post = Post(title='Order Received: '+ order_id, content=json_data.dumps(js, indent =2, sort_keys = True), author=1)
+            post = Post(title='Order Received: '+ order_id, content=json.dumps(json_data, indent =2, sort_keys = True), author=1)
             db.session.add(post)
             db.session.commit()
 
