@@ -1,10 +1,11 @@
 from flask import Blueprint
-from flask_login import login_required
+from flaskblog import db
+from flask_login import login_required, current_user
 from flask import render_template, url_for, flash, redirect, current_app, session
 from flaskblog.decorators import check_confirmed
 from flaskblog.klarnakco.forms import KCOCheckoutForm
 import requests, json
-from flaskblog.models import Post
+from flaskblog.models import User, Post
 
 klarnakco = Blueprint('klarnakco', __name__)
 
@@ -123,15 +124,15 @@ def thankyou(order_id):
 def push(order_id):
     flash('Klarna confirms order: '+ order_id, 'success')
     try:
-            response = requests.get(current_app.config['KLARNA_API_URL']+'/ordermanagement/v1/orders/'+ order_id, 
-                auth=(current_app.config['KLARNA_API_USER'],current_app.config['KLARNA_API_PASSWORD']))
-            json_data = json.loads(response.text)
+        response = requests.get(current_app.config['KLARNA_API_URL']+'/ordermanagement/v1/orders/'+ order_id, 
+                                auth=(current_app.config['KLARNA_API_USER'],current_app.config['KLARNA_API_PASSWORD']))
+        json_data = json.loads(response.text)
 
-            post = Post(title='Order Received: '+ order_id, content=json.dumps(json_data, indent =2, sort_keys = True), author=1)
-            db.session.add(post)
-            db.session.commit()
+        post = Post(title='Order Received: '+ order_id, content=json.dumps(json_data, indent =2, sort_keys = True), author= User.query.first())
+        db.session.add(post)
+        db.session.commit()
 
     except Exception as e:
-            flash('Could not verify order: '+order_id + str(e), 'danger')
+        flash('Could not verify order: '+order_id + str(e), 'danger')
 
-    return render_template('kco_push.html', title='KlarnaCheckout- Terms', legend='Order Confirmation', order=order_id)
+    return render_template('kco_push.html', title='KCO-Push', legend='Order Push Confirmation Received', order=order_id)

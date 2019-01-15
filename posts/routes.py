@@ -16,7 +16,7 @@ posts = Blueprint('posts', __name__)
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data, content=form.content.data, author=current_user)
+        post = Post(title=form.title.data, content=form.content.data, author=1)
         db.session.add(post)
         db.session.commit()
         flash('Your post has been saved', 'success')
