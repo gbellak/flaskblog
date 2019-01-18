@@ -143,6 +143,7 @@ def push(order_id):
                                 auth=(current_app.config['KLARNA_API_USER'],current_app.config['KLARNA_API_PASSWORD']))
 
         flash('We acknowledge order: '+ order_id, 'success')
+        return redirect(url_for('main.home'))
 
     except Exception as e:
         flash('Could not verify order: '+order_id + str(e), 'danger')
