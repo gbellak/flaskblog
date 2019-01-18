@@ -13,15 +13,15 @@ klarnakco = Blueprint('klarnakco', __name__)
 checkout_order = {
  "purchase_country": "se",
  "purchase_currency": "sek",
- "locale": "en-GB",
+ "locale": "se-SE",
  "billing_address": {
-   "given_name": "Testperson-se",
-   "family_name": "Approved",
-   "email": "youremail@email.com",
-   "street_address": "Stårgatan 1",
-   "postal_code": "12345",
-   "city": "Ankeborg",
-   "phone": "+46765260000",
+   "given_name": "Gabor",
+   "family_name": "Bellak",
+   "email": "gbellak@yahoo.com",
+   "street_address": "Frigångsg 8b",
+   "postal_code": "41301",
+   "city": "Göteborg",
+   "phone": "+46739023870",
    "country": "se"
  },
  "order_amount": 503341,
@@ -124,15 +124,30 @@ def thankyou(order_id):
 def push(order_id):
     flash('Klarna confirms order: '+ order_id, 'success')
     try:
+        #confirm 
         response = requests.get(current_app.config['KLARNA_API_URL']+'/ordermanagement/v1/orders/'+ order_id, 
                                 auth=(current_app.config['KLARNA_API_USER'],current_app.config['KLARNA_API_PASSWORD']))
         json_data = json.loads(response.text)
+        content = "We have just received order from customer: {fullname} \n total amount: {amount} {currency} \nKlart o Betalt!".format(
+                                      fullname = json_data['billing_address']['given_name']+ " "+ json_data['billing_address']['family_name'],
+                                      amount = json_data['order_amount']/100,
+                                      currency = json_data['purchase_currency']
 
-        post = Post(title='Order Received: '+ order_id, content=json.dumps(json_data, indent =2, sort_keys = True), author= User.query.first())
+                                     )
+
+        post = Post(title='Order Received: '+ order_id, content, author= User.query.first())
         db.session.add(post)
         db.session.commit()
 
+        response = requests.post(current_app.config['KLARNA_API_URL']+'/ordermanagement/v1/orders/'+order_id+'/acknowledge', 
+                                auth=(current_app.config['KLARNA_API_USER'],current_app.config['KLARNA_API_PASSWORD']))
+
+        flash('We acknowledge order: '+ order_id, 'success')
+
     except Exception as e:
         flash('Could not verify order: '+order_id + str(e), 'danger')
+        return redirect(url_for('main.home'))
+
+
 
     return render_template('kco_push.html', title='KCO-Push', legend='Order Push Confirmation Received', order=order_id)
