@@ -135,7 +135,7 @@ def push(order_id):
 
                                      )
 
-        post = Post(title='Order Received: '+ order_id, content, author= User.query.first())
+        post = Post(title='Order Received: '+ order_id, content = content, author= User.query.first())
         db.session.add(post)
         db.session.commit()
 
@@ -150,4 +150,3 @@ def push(order_id):
 
 
 
-    return render_template('kco_push.html', title='KCO-Push', legend='Order Push Confirmation Received', order=order_id)
