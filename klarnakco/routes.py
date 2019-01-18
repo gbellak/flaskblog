@@ -13,7 +13,7 @@ klarnakco = Blueprint('klarnakco', __name__)
 checkout_order = {
  "purchase_country": "se",
  "purchase_currency": "sek",
- "locale": "se-SE",
+ "locale": "sv-se",
  "billing_address": {
    "given_name": "Gabor",
    "family_name": "Bellak",
