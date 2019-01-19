@@ -15,14 +15,12 @@ checkout_order = {
  "purchase_currency": "sek",
  "locale": "sv-se",
  "billing_address": {
-   "organization_name" : "Hemmasittare AB"
-   "reference" : "Er Ref."
-   "attention" : "Att: Tina ska godkänna"
-   "title" : "Herr Civilingenjör"
-   "street_address2" : "Igång från gården"
-   "care_of" : "C/O Tina"
-   "organization_name" : "Hhemmasittare AB"
-   "organization_name" : "Hhemmasittare AB"
+   "organization_name" : "Hemmasittare AB",
+   "reference" : "Er Ref.",
+   "attention" : "Att: Tina ska godkänna",
+   "title" : "Herr Civilingenjör",
+   "street_address2" : "Igång från gården",
+   "care_of" : "C/O Tina",
    "given_name": "Gabor",
    "family_name": "Bellak",
    "email": "gbellak@yahoo.com",
@@ -30,7 +28,7 @@ checkout_order = {
    "postal_code": "41301",
    "city": "Göteborg",
    "phone": "+46739023870",
-   "country": "se"
+   "country": "se",
  },
  "order_amount": 503341,
  "order_tax_amount": 100668,
