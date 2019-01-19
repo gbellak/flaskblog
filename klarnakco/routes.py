@@ -20,7 +20,7 @@ checkout_order = {
    "attention" : "Att: Tina ska godkänna",
    "title" : "Herr Civilingenjör",
    "street_address2" : "Igång från gården",
-   "care_of" : "C/O Tina",
+   "care_of" : "C/O Tina brukar vilja läsa all min korrespondens innan jag får den till mig- så Tina Bellak!",
    "given_name": "Gabor",
    "family_name": "Bellak",
    "email": "gbellak@yahoo.com",
