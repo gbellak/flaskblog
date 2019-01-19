@@ -15,6 +15,14 @@ checkout_order = {
  "purchase_currency": "sek",
  "locale": "sv-se",
  "billing_address": {
+   "organization_name" : "Hemmasittare AB"
+   "reference" : "Er Ref."
+   "attention" : "Att: Tina ska godkänna"
+   "title" : "Herr Civilingenjör"
+   "street_address2" : "Igång från gården"
+   "care_of" : "C/O Tina"
+   "organization_name" : "Hhemmasittare AB"
+   "organization_name" : "Hhemmasittare AB"
    "given_name": "Gabor",
    "family_name": "Bellak",
    "email": "gbellak@yahoo.com",
