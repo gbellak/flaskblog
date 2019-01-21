@@ -20,7 +20,7 @@ checkout_order = {
    "attention" : "Att: Tina ska godkänna",
    "title" : "Herr Civilingenjör",
    "street_address2" : "Igång från gården",
-   "care_of" : "C/O Tina brukar vilja läsa all min korrespondens innan jag får den till mig- så Tina Bellak!",
+   "care_of" : "C/O Tina brukar vilja läsa all min korrespondens innan jag får den till mig!",
    "given_name": "Gabor",
    "family_name": "Bellak",
    "email": "gbellak@yahoo.com",
@@ -86,7 +86,7 @@ def checkout_initiate():
     if form.validate_on_submit():
         flash('You will be redirected to KCO checkout', 'success')
         try:
-            response = requests.post(current_app.config['KLARNA_API_URL']+'/checkout/v3/orders', 
+            response = requests.post(current_app.config['KLARNA_API_URL']+'/checkout/v3/orders',
                 auth=(current_app.config['KLARNA_API_USER'], current_app.config['KLARNA_API_PASSWORD']), json=checkout_order)
             json_data = json.loads(response.text)
             session['kco_order_id'] = json_data['order_id']
@@ -116,7 +116,7 @@ def checkout(order_id):
 def thankyou(order_id):
     if order_id == session['kco_order_id']:
         try:
-            response = requests.get(current_app.config['KLARNA_API_URL']+'/checkout/v3/orders/'+ order_id, 
+            response = requests.get(current_app.config['KLARNA_API_URL']+'/checkout/v3/orders/'+ order_id,
                 auth=(current_app.config['KLARNA_API_USER'],current_app.config['KLARNA_API_PASSWORD']))
             json_data = json.loads(response.text)
             return render_template('kco_thankyou.html', title='KlarnaKCO Confirm', snippet=json_data['html_snippet'])
@@ -130,8 +130,8 @@ def thankyou(order_id):
 def push(order_id):
     flash('Klarna confirms order: '+ order_id, 'success')
     try:
-        #confirm 
-        response = requests.get(current_app.config['KLARNA_API_URL']+'/ordermanagement/v1/orders/'+ order_id, 
+        #confirm
+        response = requests.get(current_app.config['KLARNA_API_URL']+'/ordermanagement/v1/orders/'+ order_id,
                                 auth=(current_app.config['KLARNA_API_USER'],current_app.config['KLARNA_API_PASSWORD']))
         json_data = json.loads(response.text)
         content = "We have just received order from customer: {fullname} \n total amount: {amount} {currency} \nKlart o Betalt!".format(
@@ -145,15 +145,12 @@ def push(order_id):
         db.session.add(post)
         db.session.commit()
 
-        response = requests.post(current_app.config['KLARNA_API_URL']+'/ordermanagement/v1/orders/'+order_id+'/acknowledge', 
+        response = requests.post(current_app.config['KLARNA_API_URL']+'/ordermanagement/v1/orders/'+order_id+'/acknowledge',
                                 auth=(current_app.config['KLARNA_API_USER'],current_app.config['KLARNA_API_PASSWORD']))
 
-        flash('We acknowledge order: '+ order_id, 'success')
-        return redirect(url_for('main.home'))
+        return flash('We acknowledge order: '+ order_id, 'success')
+#        return redirect(url_for('main.home'))
 
     except Exception as e:
         flash('Could not verify order: '+order_id + str(e), 'danger')
         return redirect(url_for('main.home'))
-
-
-
