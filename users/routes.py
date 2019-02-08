@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app
+from flask import Blueprint, current_app, session
 from flaskblog import db, bcrypt
 from flaskblog.models import User, Post
 from flaskblog.users.forms import RegistrationForm, LoginForm, AccountUpdateForm, RequestResetPasswordForm,  ResetPasswordForm, Request_email_token
@@ -6,6 +6,7 @@ from flaskblog.users.utils import save_picture, remove_picture, send_reset_email
 from flask import render_template, url_for, flash, redirect, request
 from flask_login import login_user, current_user, logout_user, login_required
 from datetime import datetime
+from flaskblog.webshop.utils import merge_saved_to_active_cart, save_active_cart2user
 
 users = Blueprint('users', __name__)
 
@@ -67,6 +68,9 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
+            #find old cart of user and merge with current if needed:
+            merge_saved_to_active_cart()
+
             next_page = request.args.get('next')
             if next_page:
                 return redirect(next_page)
@@ -75,12 +79,15 @@ def login():
         else:
             flash('Login failed! Please check your email and password', 'danger')
 
+        
+
     return render_template('login.html', title='Login', form=form)
 
 
 @users.route('/logout')
 @login_required
 def logout():
+    save_active_cart2user() #save shopping cart for future login
     logout_user()
     return redirect(url_for('main.home'))
 

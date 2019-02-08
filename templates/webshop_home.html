@@ -1,0 +1,27 @@
+{%extends "layout.html"%}
+{%block content%}
+
+    <h1>Active Cart: {{ cart_id }}</h1>
+        {% for product in products.items %}
+        <article class="media content-section">
+            <div class="media-body ">
+                
+                <h2><a class="article-title" href="{{url_for('webshop.product_page',product_id = product.id)}}">{{ product.name }}</a></h2>
+                <p class="article-content">{{ product.unit_price }}</p>
+            </div>
+        </article>
+        {%endfor%}
+        {% for page_num in products.iter_pages(left_edge = 1, right_edge = 1, left_current=1, right_current = 2) %}
+            {% if page_num%}
+                {% if products.page == page_num%}
+                <a class="btn btn-info mb-4" href="{{url_for('webshop.webshop_home',page=page_num)}}">{{page_num}}</a>
+                {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{url_for('webshop.webshop_home',page=page_num)}}">{{page_num}}</a>
+                {% endif %}
+            {% else %}
+                ...
+            {% endif %}
+
+        {%endfor%}
+
+    {%endblock content%}

@@ -2,6 +2,8 @@ from flask import Blueprint
 from flaskblog.models import Post
 from flask import render_template, request
 
+from flaskblog.users.forms  import RegistrationForm
+
 
 main = Blueprint('main', __name__)
 
@@ -16,4 +18,5 @@ def home():
 
 @main.route('/about')
 def about():
-	return render_template('about.html', title='About')
+	form = RegistrationForm()
+	return render_template('about.html', title='About', form = form)

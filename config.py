@@ -16,6 +16,8 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
 
+    ROOT_DOMAIN_URL = 'https://flaskblog.duckdns.org'
+
 
 class ConfigFU(Config):
     
