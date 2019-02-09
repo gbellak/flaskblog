@@ -35,7 +35,6 @@
 					render: function() {
 						this.$el.html('');
 						this.collection.each(function(shoppingCartLine){
-							console.log("processing line " + shoppingCartLine.id );
 							var cartLineView = new CartLineView({model: shoppingCartLine, collection: this.collection});
 							this.$el.append(cartLineView.render().el);
 						}, this)

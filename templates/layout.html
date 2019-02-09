@@ -81,6 +81,7 @@
 
     {% block content %}{% endblock %}
   </div>
+  </div>
   <div class="col-md-4">
     <div class="content-section">
       <h3>Our Sidebar</h3>
@@ -155,21 +156,9 @@
       <span class="quantity_unit"><%= quantity_unit %>  </span>
     
       <span class="product_name"><%= product_name %>  kr: </span>
-      <span class="unit_price"><%= unit_price %></span>
+      <span class="unit_price"><%= unit_price %></span>      
 
-      
-      
       <a href="#" class="remove_item">[x]</a>
-    </script>
-
-    <script type="text/template"  id = "line_template">
-        <td>+
-          <input type="text" name="quantity" class="form-input" id="quantity_input_<%= model.id %>" value="<%= model.quantity %>">
-          - X
-        </td>
-        <td><%= model.product_name %></td>
-        <td><%= model.unit_price %></td>
-        <th scope="row" id="row_sum"><%= model.linetotal %></th>
     </script>
 
 
@@ -187,13 +176,9 @@
     <script src="{{url_for('static',filename = 'js/backbone/backbone-min.js')}}"></script>
     <script src="{{url_for('static',filename = 'js/backbone/backform.js')}}"></script>
     <script src="{{url_for('static',filename = 'js/backbone/collectionview.js')}}"></script>
-
-
-
     
     <script> var myCart = {{ session['cart_id'] }}</script>
-<!--  <script src="{{url_for('static',filename = 'js/test.js')}}"></script>  -->
-  <script src="{{url_for('static',filename = 'js/app/cart.js')}}"></script>
+    <script src="{{url_for('static',filename = 'js/app/cart.js')}}"></script>
     {% block javascript %}{% endblock %}
 
   
