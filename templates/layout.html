@@ -81,7 +81,9 @@
 
     {% block content %}{% endblock %}
   </div>
-  </div>
+</div>
+
+
   <div class="col-md-4">
     <div class="content-section">
       <h3>Our Sidebar</h3>
@@ -115,22 +117,8 @@
                   </button>
                 </div>
                 <div class="modal-body">
-        <table class="table table-sm">
-  <thead>
-    <tr>
-      <th scope="col" >Quantity</th>
-      <th scope="col">Product</th>
-      <th scope="col">UnitPrice</th>
-      <th scope="col">Total</th>
-
-    </tr>
-  </thead>
-  <tbody id = "cart_table">
-   
-
-  </tbody>
-</table>
-      </div>
+                  <div class="content-section" id="cart-lines-container"></div>
+              </div>
 
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>

@@ -27,20 +27,33 @@
 
 	var CartView = Backbone.View.extend({
 //					model: tweets,
-					el: $('#cart-container'),
+					el: $('#cart-lines-container'),
 					initialize: function() {
 //						this.model.on('add', this.render, this);
 						this.collection.on('remove', this.render, this);
 					},
+
+					events: {
+						'click #cart-save-button': 'cartSave',
+					},
+
 					render: function() {
 						this.$el.html('');
 						this.collection.each(function(shoppingCartLine){
 							var cartLineView = new CartLineView({model: shoppingCartLine, collection: this.collection});
 							this.$el.append(cartLineView.render().el);
 						}, this)
+
+						this.$el.append('<hr> <button type="button" class="btn btn-success"  id="cart-save-button">SaveCart</button>').html();
 						
 						return this;
-					}
+					},
+
+					cartSave: function(){
+						Backbone.sync('update', this.collection);
+						console.log('updating');
+					},
+
 				});
 
 	var CartLineView = Backbone.View.extend({

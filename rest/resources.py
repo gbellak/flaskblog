@@ -1,7 +1,8 @@
-from flask import Flask, Blueprint, jsonify
+from flask import Flask, Blueprint, jsonify, request
 from flask_restful import reqparse, abort, Api, Resource
 from flaskblog import db, api
 from flaskblog.models import Product, Cart, CartLineItem
+
 
 
 def get_or_abort_if_doesnt_exist(model, id):
@@ -22,6 +23,13 @@ class ShoppingCart(Resource):
         
         return reply
 
+    def put(self, locale, id):
+
+        
+
+
+        print(request.get_json())
+        
 
         
 
