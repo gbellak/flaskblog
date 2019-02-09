@@ -32,9 +32,9 @@ var LineView= Backbone.View.extend({
 	},
 
 	initialize: function() {
-    this.model.on("remove", this.remove);
-    console.log(parseInt('lineprice: '+ this.model.quantity * this.model.unit_price));
-    this.model.set({linetotal: parseInt(this.model.quantity * this.model.unit_price)});
+    	this.model.on("remove", this.remove);
+    	console.log(parseInt('lineprice: '+ this.model.quantity * this.model.unit_price));
+    	this.model.set({linetotal: parseInt(this.model.quantity * this.model.unit_price)});
 		},
 
 	render : function(){

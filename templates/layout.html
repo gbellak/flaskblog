@@ -1,5 +1,3 @@
-
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -103,7 +101,7 @@
 </div>
 </main>
 
-{% block cart_modal %}{% endblock %}
+
 
 <!-- Modal -->
           <div class="modal fade " id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
@@ -149,18 +147,30 @@
 
 
 
+<!-- Templates -->
+    <script type="text/template" id="CartLine-template">
+      <a href="#" class="increase_quantity">[+]</a>
+      <span class="quantity"><%= quantity %></span>
+      <a href="#" class="decrease_quantity">[-]</a>
+      <span class="quantity_unit"><%= quantity_unit %>  </span>
+    
+      <span class="product_name"><%= product_name %>  kr: </span>
+      <span class="unit_price"><%= unit_price %></span>
 
+      
+      
+      <a href="#" class="remove_item">[x]</a>
+    </script>
 
-
-
-
-
-
-
-
-
-
-
+    <script type="text/template"  id = "line_template">
+        <td>+
+          <input type="text" name="quantity" class="form-input" id="quantity_input_<%= model.id %>" value="<%= model.quantity %>">
+          - X
+        </td>
+        <td><%= model.product_name %></td>
+        <td><%= model.unit_price %></td>
+        <th scope="row" id="row_sum"><%= model.linetotal %></th>
+    </script>
 
 
 <!-- Optional JavaScript -->
@@ -178,20 +188,15 @@
     <script src="{{url_for('static',filename = 'js/backbone/backform.js')}}"></script>
     <script src="{{url_for('static',filename = 'js/backbone/collectionview.js')}}"></script>
 
-{% block javatemplates %} {% endblock %}
 
-    <script type="text/template"  id = "line_template">
-        <td>+
-          <input type="text" name="quantity" class="form-input" id="quantity_input_<%= model.id %>" value="<%= model.quantity %>">
-          - X
-        </td>
-        <td><%= model.product_name %></td>
-        <td><%= model.unit_price %></td>
-        <th scope="row" id="row_sum"><%= model.linetotal %></th>
-    </script>
 
+    
     <script> var myCart = {{ session['cart_id'] }}</script>
-  <script src="{{url_for('static',filename = 'js/test.js')}}"></script>
+<!--  <script src="{{url_for('static',filename = 'js/test.js')}}"></script>  -->
+  <script src="{{url_for('static',filename = 'js/app/cart.js')}}"></script>
     {% block javascript %}{% endblock %}
+
+  
+
   </body>
 </html>
