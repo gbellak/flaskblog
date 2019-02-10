@@ -10,31 +10,48 @@
 		                quantity_unit: "",
 		                unit_price: "",
 						}
-					}
+					},
+
+			total_amount: function(){
+				var total_amount = this.quantity * this.unit_price;
+				return total_amount
+			},
+
+			toJSON: function(){  //overriding toJSON of model
+    				// get the standard json for the object
+    				var json = Backbone.Model.prototype.toJSON.apply(this, arguments);
+
+    				// get the calculated total_amount
+    				json.total_amount = this.total_amount;
+
+    				// send it all back
+    				return json;
+ 					 },
 			});
 
 	var ShoppingCart = Backbone.Collection.extend({
 			model:  ShoppingCartLine,
 
 			initialize: function(models, options){
-				console.log("new ShoppingCart #"+options.cart_id +" for "+options.locale);
 				this.url = '/api/shopping_cart/'+options.locale+'/'+options.cart_id;
-					
-				console.log("@"+this.url);
+				
+
 				},
 
         });
 
 	var CartView = Backbone.View.extend({
-//					model: tweets,
+
 					el: $('#cart-lines-container'),
 					initialize: function() {
-//						this.model.on('add', this.render, this);
 						this.collection.on('remove', this.render, this);
+						this.collection.on('change', this.render, this);
+
 					},
 
 					events: {
-						'click #cart-save-button': 'cartSave',
+						'click .cart-save': 'cartSave',
+						
 					},
 
 					render: function() {
@@ -42,9 +59,15 @@
 						this.collection.each(function(shoppingCartLine){
 							var cartLineView = new CartLineView({model: shoppingCartLine, collection: this.collection});
 							this.$el.append(cartLineView.render().el);
+
 						}, this)
 
-						this.$el.append('<hr> <button type="button" class="btn btn-success"  id="cart-save-button">SaveCart</button>').html();
+						this.$el.append('<hr><h5>Cart Total: ' + this.cartTotal() +'  kr</h5>').html();
+
+						this.$el.append('<hr><button type="button" class="btn btn-info cart-save"  id="cart-save-button">SaveCart</button>   '+
+
+										'<a href="'+ CheckOut_URL +'" class="btn btn-success cart-save" + id="cart-checkout-button">CheckOut</a>'
+							);
 						
 						return this;
 					},
@@ -52,6 +75,16 @@
 					cartSave: function(){
 						Backbone.sync('update', this.collection);
 						console.log('updating');
+					},
+
+					cartTotal: function(){
+						var cartSum = 0;
+						$('.total_amount').each(function(){
+							cartSum += parseFloat($(this).text());
+						});
+						
+						return cartSum;
+
 					},
 
 				});
@@ -82,13 +115,18 @@
 
 					decrease_quantity: function(){
 						var quantity = this.model.get('quantity');
-						quantity--;
+						
+						if (quantity >1){  //min 1 item must remain. Delete with delete action, not by setting quantity 0
+							quantity--;
+						}
+						
 						this.model.set({"quantity": quantity});
 						this.render();
 					},
 										
 					remove_item: function(){
-						this.collection.remove(this.model);				
+						this.collection.remove(this.model.destroy());
+						
 					},
 		});
 
@@ -104,12 +142,6 @@
 						shoppingCartView.render();
 					},
 		});
-
-
-
-
-
-
 
 	});
 

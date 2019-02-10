@@ -28,7 +28,7 @@ def new_post():
 @check_confirmed
 def post(post_id):
     post = Post.query.get_or_404(post_id)
-    f
+    
 
 
 @posts.route('/post/<int:post_id>/update', methods=['GET', 'POST'])

@@ -24,11 +24,16 @@ class ShoppingCart(Resource):
         return reply
 
     def put(self, locale, id):
+        json_data= request.get_json(force=True)
+        for line in json_data:
+            cartline = get_or_abort_if_doesnt_exist( CartLineItem, id=line['id'])
+            cartline.quantity=line['quantity']
+            db.session.add(cartline)
 
-        
+            print('id: '+str(line['id'])+ '  quantity : '+ str(line['quantity']))
+        db.session.commit()
 
-
-        print(request.get_json())
+        print(json_data)
         
 
         
@@ -41,6 +46,7 @@ class ShoppingCartLine(Resource):
 
         product = get_or_abort_if_doesnt_exist(Product, cart_line.product_id)
         reply = {"id":cart_line.id,
+                 "product_id": product.id,   # Should have product identifier??? / Refactor Product first!
                  "product_name": product.name,
                 "quantity": cart_line.quantity,
                 "quantity_unit":  product.quantity_unit,
@@ -49,22 +55,10 @@ class ShoppingCartLine(Resource):
         }
         return reply
 
-    def put(self, locale, cart_id, id):
-        parser = reqparse.RequestParser()
-        parser.add_argument('quantity', type=int)
-        args = parser.parse_args()
-
-        cart_line = get_or_abort_if_doesnt_exist(CartLineItem, id)
-        print(cart_line)
-        print(args)
-        print(args.quantity)
-        if cart_line.cart_id != cart_id:
-            abort(404, message=cart_id +"Line {} doesn't belong to Cart {}".format(cart_line.cart_id, cart_id))
-        
-        if args.quantity:
-            cart_line.quantity = args.quantity
-            db.session.add(cart_line)
-            db.session.commit()
+    def delete (self, locale, cart_id, id):
+        cartline = CartLineItem.query.get_or_404(id)      
+        db.session.delete(cartline)
+        db.session.commit()
 
 
 

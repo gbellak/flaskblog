@@ -108,7 +108,7 @@
 
 <!-- Modal -->
           <div class="modal fade " id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" >My Cart: #{{ session['cart_id'] }}</h5>
@@ -121,6 +121,7 @@
               </div>
 
                 <div class="modal-footer">
+
                   
                 </div>
               </div>
@@ -133,21 +134,21 @@
 <!-- Templates -->
     <script type="text/template" id="CartLine-template">
       <a href="#" class="increase_quantity">[+]</a>
-      <span class="quantity"><%= quantity %></span>
+      <b><span class="quantity"><%= quantity %></span></b>
       <a href="#" class="decrease_quantity">[-]</a>
-      <span class="quantity_unit"><%= quantity_unit %>  </span>
-    
+      <span class="quantity_unit"><%= quantity_unit %>  ID:</span>
+      <span class="product_id"><%= product_id %></span>
       <span class="product_name"><%= product_name %>  kr: </span>
       <span class="unit_price"><%= unit_price %></span>      
 
-      <a href="#" class="remove_item">[x]</a>
+
+      <b><span> | Total kr: </span><span class="total_amount"><%= total_amount() %> | </span> </b>
+            <a href="#" class="remove_item">Delete</a>
     </script>
 
 
 <!-- Optional JavaScript -->
     <script src="{{url_for('static',filename = 'js/backbone/jquery-3.3.1.min.js')}}"></script>
-<!--
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>    -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
@@ -158,12 +159,15 @@
     <script src="{{url_for('static',filename = 'js/backbone/backbone-min.js')}}"></script>
     <script src="{{url_for('static',filename = 'js/backbone/backform.js')}}"></script>
     <script src="{{url_for('static',filename = 'js/backbone/collectionview.js')}}"></script>
-    
-    <script> var myCart = {{ session['cart_id'] }}</script>
-    <script src="{{url_for('static',filename = 'js/app/cart.js')}}"></script>
-    {% block javascript %}{% endblock %}
 
-  
+    <script src="{{url_for('static',filename = 'js/app/cart.js')}}"></script>
+
+<!-- Passing some variables from server to javascript -->    
+    <script> var myCart = {{ session['cart_id'] }};  //passing active cart id
+            var CheckOut_URL = "{{url_for('main.home')}}";  //where to redirect upon cart checkout WRONG URL!!!!!!!!!!!!!!!!!!!!!
+    </script>
+    
+    {% block javascript %}{% endblock %}
 
   </body>
 </html>
