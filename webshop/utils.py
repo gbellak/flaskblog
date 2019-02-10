@@ -32,7 +32,7 @@ def get_active_cart():
             cart= create_new_cart()
 
     elif current_user.is_authenticated: #retrieve if user known and has a stored or abandonned cart 
-        cart = Cart.query.filter_by(cart_owner = current_user.id, is_closed = False).order_by(Cart.timestamp.desc()).first() 
+        cart = Cart.query.filter_by(owner = current_user.id, is_closed = False).order_by(Cart.timestamp.desc()).first() 
                 #try to retreive latest non closed cart owned by user
         if cart:
             session['cart_id'] = cart.id
@@ -70,7 +70,7 @@ def create_new_cart():
     else:
         owner_id = None
 
-    cart = Cart(cart_owner = owner_id)
+    cart = Cart(owner = owner_id)
     
     db.session.add(cart)
     db.session.commit()
@@ -87,13 +87,13 @@ def pop_or_takeover_not_owned_active_cart():
         cart = Cart.query.get(session['cart_id'])
 
         if current_user.is_authenticated:
-            if cart.cart_owner == None:
-                cart.cart_owner = current_user.id
+            if cart.owner == None:
+                cart.owner = current_user.id
                 db.session.add(cart)
                 db.session.commit()
                 flash("cart: "+str(cart.id) + "  take over", 'warning')
 
-            elif cart.cart_owner != current_user.id:
+            elif cart.owner != current_user.id:
                 session.pop('cart_id', None) #pop someone elses cart
                 cart_id = None
 
@@ -101,7 +101,7 @@ def pop_or_takeover_not_owned_active_cart():
                 pass
 
         else:
-            if cart.cart_owner != None:
+            if cart.owner != None:
                 session.pop('cart_id', None) #pop someone elses cart
                 cart_id = None
 
@@ -110,7 +110,7 @@ def merge_saved_to_active_cart():
     if current_user.is_authenticated == False:
         return
            
-    old_cart = Cart.query.filter_by(cart_owner = current_user.id, is_closed = False).order_by(Cart.timestamp.desc()).first() 
+    old_cart = Cart.query.filter_by(owner = current_user.id, is_closed = False).order_by(Cart.timestamp.desc()).first() 
                 #try to retreive latest non checked out cart owned by user
 
     pop_or_takeover_not_owned_active_cart()
@@ -148,7 +148,7 @@ def save_active_cart2user():
         cart = Cart.query.get(session['cart_id'])
         
         if cart:
-            cart.cart_owner = current_user.id
+            cart.owner = current_user.id
             db.session.add(cart)
             db.session.commit()
             session.pop('cart_id', None)

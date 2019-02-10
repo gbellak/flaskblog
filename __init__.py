@@ -24,8 +24,8 @@ api = Api()
 ma = Marshmallow()
 
 from flaskblog.rest.resources import ShoppingCart, ShoppingCartLine
-api.add_resource(ShoppingCart, '/api/shopping_cart/<string:locale>/<int:id>')
-api.add_resource(ShoppingCartLine, '/api/shopping_cart/<locale>/<int:cart_id>/<int:id>')
+api.add_resource(ShoppingCart, '/api/shopping_cart/<string:locale_slug>/<int:id>')
+api.add_resource(ShoppingCartLine, '/api/shopping_cart/<string:locale_slug>/<int:cart_id>/<int:id>')
 
 
 
@@ -50,6 +50,7 @@ def create_app(config_class=Config):
     from flaskblog.admin.routes import admin
     from flaskblog.klarnapay.routes import klarnapay
     from flaskblog.klarnakco.routes import klarnakco
+    from flaskblog.orders.routes import orders
 
     app.register_blueprint(users)
     app.register_blueprint(webshop, url_prefix='/webshop')
@@ -59,5 +60,6 @@ def create_app(config_class=Config):
     app.register_blueprint(admin)
     app.register_blueprint(klarnapay)
     app.register_blueprint(klarnakco)
+    app.register_blueprint(orders, url_prefix='/orders')
 
     return app

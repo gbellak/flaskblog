@@ -15,15 +15,15 @@ def get_or_abort_if_doesnt_exist(model, id):
 
 
 class ShoppingCart(Resource):
-    def get(self, locale, id):
+    def get(self, locale_slug, id):
         cart = get_or_abort_if_doesnt_exist( Cart, id)
         reply = []
         for cl in cart.cart_line_items:
-                 reply.append(ShoppingCartLine.get(cl, locale = locale, cart_id=id, id = cl.id))
+                 reply.append(ShoppingCartLine.get(cl, locale_slug = locale_slug, cart_id=id, id = cl.id))
         
         return reply
 
-    def put(self, locale, id):
+    def put(self, locale_slug, id):
         json_data= request.get_json(force=True)
         for line in json_data:
             cartline = get_or_abort_if_doesnt_exist( CartLineItem, id=line['id'])
@@ -33,13 +33,12 @@ class ShoppingCart(Resource):
             print('id: '+str(line['id'])+ '  quantity : '+ str(line['quantity']))
         db.session.commit()
 
-        print(json_data)
         
 
         
 
 class ShoppingCartLine(Resource):
-    def get(self, locale, cart_id, id):
+    def get(self, locale_slug, cart_id, id):
         cart_line = get_or_abort_if_doesnt_exist(CartLineItem, id)
         if cart_line.cart_id != cart_id:
             abort(404, message=cart_id +"Line {} doesn't belong to Cart {}".format(cart_line.cart_id, cart_id))
@@ -55,7 +54,7 @@ class ShoppingCartLine(Resource):
         }
         return reply
 
-    def delete (self, locale, cart_id, id):
+    def delete (self, locale_slug, cart_id, id):
         cartline = CartLineItem.query.get_or_404(id)      
         db.session.delete(cartline)
         db.session.commit()

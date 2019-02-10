@@ -61,12 +61,13 @@ class Post(db.Model):
         return "Post('{}', '{}')".format(title,date_posted)
 
 
-class CountrySettings(db.Model):
-    __tablename__ = "country_settings"
+class Locale(db.Model):
+    __tablename__ = "locale"
     id = db.Column(db.Integer, primary_key=True)
-    purchase_country = db.Column(db.String(8), nullable = False, default="se")
-    purchase_currency = db.Column(db.String(8), nullable = False, default="sek")
-    locale = db.Column(db.String(8), nullable = False, default="sv-se")
+    purchase_country = db.Column(db.String(8), nullable = False )
+    purchase_currency = db.Column(db.String(8), nullable = False)
+    locale = db.Column(db.String(8), nullable = False, unique=True)
+    slug =  db.Column(db.String(8), nullable = False, unique=True)
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -87,6 +88,14 @@ class Product(db.Model):
         return current_app.config['ROOT_DOMAIN_URL']+ url_for('webshop.product_page', product_id = self.product_id)
 
 
+class OrderStatus(db.Model):
+    __tablename__ = "order_status"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), default = 'preliminary')
+    orders = db.relationship('Order', backref='Status', lazy=True)
+
+
+
 class OrderLine(db.Model):
     __tablename__ = "order_line"
     id = db.Column(db.Integer, primary_key=True)
@@ -104,24 +113,21 @@ class Order(db.Model):
     __tablename__ = "order"
     id = db.Column(db.Integer, primary_key=True)
     order_lines= db.relationship('OrderLine', backref='Order', lazy=True)
-    country_setting_id = db.Column(db.Integer, db.ForeignKey('country_settings.id'))
-    
+    locale_id = db.Column(db.Integer, db.ForeignKey('locale.id'))
+    status = db.Column(db.Integer, db.ForeignKey('order_status.id'), nullable=False, default = 1)
+    updated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    owner = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True, default = None)
+
+    def __init__(self, locale_id):
+        self.locale_id = locale_id
+
  #   def total_amount(self):
 #        return db.func.sum(Product.unit_price)
     
  #   total = db.Column(db.Integer)
  #   total_amount
  #   total_tax_amount 
-
-
-class CartLineAsDict(db.Model):
-    __tablename__ = "cart_line_as_dict"
-    id = db.Column(db.Integer, primary_key=True)
-    cart_id = db.Column(db.Integer, db.ForeignKey('cart.id'))
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
-    quantity = db.Column(db.Integer, nullable=False, default = 1)
-
-
 
 
 
@@ -139,7 +145,7 @@ class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     is_closed = db.Column(db.Boolean, nullable=False, default=False) # Historic Carts are checked out
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    cart_owner = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True, default = None)
+    owner = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True, default = None)
     cart_line_items = db.relationship('CartLineItem', backref='cart', lazy=True)
 
 
