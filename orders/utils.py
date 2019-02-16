@@ -7,6 +7,33 @@ from flaskblog.models import User, Post
 
 
 def new_order_from_cart(locale, cart):
-	pass
+    pass
+
+
+
+
+
+
+
+
+
+
+
+
+class kcoOrderJSON(object):
+    
+    def __init__(self, dictionary):
+        self.orderJSON = dictionary
+
+    def merge(self, dictionary):
+        self.orderJSON = {**self.orderJSON, **dictionary}
+
+    def getJSON(self):
+        return self.orderJSON
+
+
+
+
+
 
 

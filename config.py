@@ -16,7 +16,7 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
 
-    LOCALE_SLUG = 'se'
+    DEFAULT_LOCALE = 1
  #   ROOT_DOMAIN_URL = 'https://flaskblog.duckdns.org'
 
 
@@ -40,3 +40,4 @@ class ConfigFU(Config):
     KLARNA_API_PASSWORD = 'x26cuCfXeSW9CwWq'
     KLARNA_API_URL = 'https://api.playground.klarna.com/payments/v1/sessions'
 
+    DEFAULT_LOCALE = 1

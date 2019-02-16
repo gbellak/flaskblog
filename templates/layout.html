@@ -137,13 +137,22 @@
       <b><span class="quantity"><%= quantity %></span></b>
       <a href="#" class="decrease_quantity">[-]</a>
       <span class="quantity_unit"><%= quantity_unit %>  ID:</span>
-      <span class="product_id"><%= product_id %></span>
-      <span class="product_name"><%= product_name %>  kr: </span>
-      <span class="unit_price"><%= unit_price %></span>      
+      <span class="product_id"><%= product_id %>, </span>
+
+      <span class="product_name"><%= product_name %>, </span>
+      <span class="reference"><%= reference %>, </span>
+
+      <span class="unit_price"><%= unit_price %> kr<br></span>
+      <span class="discount"><%= discount %>%</span>
 
 
-      <b><span> | Total kr: </span><span class="total_amount"><%= total_amount() %> | </span> </b>
-            <a href="#" class="remove_item">Delete</a>
+      <span class="tax_rate"><%= tax_rate %>%</span> 
+
+
+      <b><span> | Total kr: </span><span class="total_amount"><%= total_amount() %></span>
+                <span> |  </b> Discount: </span><span class="total_discount"><%= total_discount() %></span>
+                <span> | </b> Tax: </span><span class="total_tax_amount"><%= total_tax_amount() %></span>
+                <span> | <a href="#" class="remove_item">Delete</a></span>
     </script>
 
 
@@ -159,13 +168,16 @@
     <script src="{{url_for('static',filename = 'js/backbone/backbone-min.js')}}"></script>
     <script src="{{url_for('static',filename = 'js/backbone/backform.js')}}"></script>
     <script src="{{url_for('static',filename = 'js/backbone/collectionview.js')}}"></script>
+    <script src="{{url_for('static',filename = 'js/backbone/backbone-associations.js')}}"></script>
+    
 
     <script src="{{url_for('static',filename = 'js/app/cart.js')}}"></script>
 
 <!-- Passing some variables from server to javascript -->    
-    <script> var myCart = {{ session['cart_id'] }};  //passing active cart id
-            var CheckOut_URL = "{{url_for('main.home')}}";  //where to redirect upon cart checkout WRONG URL!!!!!!!!!!!!!!!!!!!!!
-    </script>
+    <script> var myCart = {{ session['cart_id'] }}; 
+            var locale_slug = 1    //{{ session['locale_slug'] }}; ---not sure how to pass value to javascript
+   //passing active cart id and locale to javascript to use </script>
+
     
     {% block javascript %}{% endblock %}
 

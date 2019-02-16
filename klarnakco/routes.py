@@ -7,7 +7,15 @@ from flaskblog.klarnakco.forms import KCOCheckoutForm
 import requests, json
 from flaskblog.models import User, Post
 
+
+
+
+
 klarnakco = Blueprint('klarnakco', __name__)
+from flaskblog.models import Product, Cart, CartLineItem
+
+
+
 
 
 checkout_order = {
@@ -32,21 +40,7 @@ checkout_order = {
  },
  "order_amount": 503341,
  "order_tax_amount": 100668,
- "order_lines": [
-   {
-     "type": "physical",
-     "reference": "19-402-SWE",
-     "name": "Camera Travel Set",
-     "quantity": 1,
-     "quantity_unit": "pcs",
-     "unit_price": 603341,
-     "tax_rate": 2500,
-     "total_amount": 503341,
-     "total_discount_amount": 100000,
-     "total_tax_amount": 100668,
-     "image_url": "http://merchant.com/logo.png"
-   }
- ],
+ 
  "merchant_urls": {
    "terms": "https://flaskblog.duckdns.org/klarnakco/terms",
    "checkout": "https://flaskblog.duckdns.org/klarnakco/checkout/{checkout.order.id}",
@@ -75,6 +69,13 @@ checkout_order = {
    }
  ]
 }
+
+
+#  checkout_order["order_lines"] = OrderLines(18)
+
+
+
+
 
 
 
@@ -154,3 +155,13 @@ def push(order_id):
     except Exception as e:
         flash('Could not verify order: '+order_id + str(e), 'danger')
         return redirect(url_for('main.home'))
+
+
+
+
+
+
+
+
+
+

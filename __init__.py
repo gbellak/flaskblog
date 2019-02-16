@@ -14,6 +14,8 @@ from datetime import datetime
 
 
 
+
+
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
@@ -41,7 +43,7 @@ def create_app(config_class=Config):
     api.init_app(app)
     ma.init_app(app)
 
-    
+        
     from flaskblog.users.routes import users
     from flaskblog.webshop.routes import webshop
     from flaskblog.posts.routes import posts

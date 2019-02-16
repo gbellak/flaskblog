@@ -1,0 +1,60 @@
+{%extends "layout.html"%}
+{%block content%}
+
+
+<div class="content-section">
+
+    <h1>Active Cart: {{ cart_id }}</h1>
+        {% for cartline in cartlines %}
+            <ul>{{cartline.quantity}}  {{cartline.ProductSellableUnit.quantity_unit}}| {{cartline.ProductSellableUnit.Product.name}}- {{cartline.ProductSellableUnit.reference}} |
+            {{cartline.ProductSellableUnit.unit_price}} | 
+              
+                 <span style="color:red"> {{cartline.ProductSellableUnit.special_price}} </span> | 
+            
+
+              
+                 {{cartline.cart_line_discount}}%
+            
+                </ul>      
+
+        {%endfor%}
+
+        <h5>Cart total:  
+        
+
+
+
+      <form  action="" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+              {{ form.discount_code.label(class="form-control-label")}}
+              {%if form.discount_code.errors%}
+                    {{ form.discount_code(class="form-control form-control-lg  is-invalid")}}
+                        <div class="invalid-feedback">
+                            {%for error in form.discount_code.errors %}
+                              <span>{{ error}}</span>
+                          {%endfor%}
+                      </div>
+            {%else%}
+                {{ form.discount_code(class="form-control form-control-lg")}}
+
+            {%endif%}
+            </div>
+
+        <div class="form-group">
+          {{form.submit(class="btn btn-outline-info btn-sm mt-1 mb-1")}}
+        </div>
+      </form>
+
+      <div class="">
+                      <a class="btn btn-success btn-sm mt-1 mb-1" href="#">Place Order</a>
+      </div>
+    {%endblock content%}
+
+{% block javascript %}
+<script>
+$('#cartModal').on('hidden', function () {
+  window.location.reload();
+})
+</script>
+{% endblock %}

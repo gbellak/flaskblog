@@ -1,7 +1,7 @@
-from flask import Flask, Blueprint, jsonify, request
+from flask import Flask, Blueprint, jsonify, request, render_template
 from flask_restful import reqparse, abort, Api, Resource
 from flaskblog import db, api
-from flaskblog.models import Product, Cart, CartLineItem
+from flaskblog.models import Product, Cart, CartLineItem, ProductSellableUnit
 
 
 
@@ -39,19 +39,24 @@ class ShoppingCart(Resource):
 
 class ShoppingCartLine(Resource):
     def get(self, locale_slug, cart_id, id):
-        cart_line = get_or_abort_if_doesnt_exist(CartLineItem, id)
-        if cart_line.cart_id != cart_id:
-            abort(404, message=cart_id +"Line {} doesn't belong to Cart {}".format(cart_line.cart_id, cart_id))
+        cartline = get_or_abort_if_doesnt_exist(CartLineItem, id)
+        if cartline.cart_id != cart_id:
+            abort(404, message=cart_id +"Line {} doesn't belong to Cart {}".format(cartline.cart_id, cart_id))
 
-        product = get_or_abort_if_doesnt_exist(Product, cart_line.product_id)
-        reply = {"id":cart_line.id,
-                 "product_id": product.id,   # Should have product identifier??? / Refactor Product first!
-                 "product_name": product.name,
-                "quantity": cart_line.quantity,
-                "quantity_unit":  product.quantity_unit,
-                "unit_price": product.unit_price,
+        product_sellable_unit = get_or_abort_if_doesnt_exist(ProductSellableUnit, cartline.product_sellable_unit_id)
+        product = get_or_abort_if_doesnt_exist(Product, product_sellable_unit.product_id)
+        reply = {"id":cartline.id,
+                "product_id": product.id,   # Should have product identifier??? / Refactor Product first!
+                "product_name": product.name,
+                "reference": product_sellable_unit.reference,
+                "quantity": cartline.quantity,
+                "quantity_unit":  product_sellable_unit.quantity_unit,
+
+                "tax_rate": product.tax_rate,
+                "unit_price": product.base_unit_price + product_sellable_unit.delta_unit_price,
+                "discount": max(product.base_discount + product_sellable_unit.delta_discount, cartline.cart_line_discount),
                 
-        }
+            }
         return reply
 
     def delete (self, locale_slug, cart_id, id):

@@ -19,7 +19,7 @@ def webshop_home():
         cart_id= "no active cart"
 
     page = request.args.get('page', 1, type=int)
-    products = Product.query.order_by(Product.unit_price.asc()).paginate(page=page, per_page=5)
+    products = Product.query.order_by(Product.base_unit_price.asc()).paginate(page=page, per_page=5)
     return render_template('webshop_home.html', products=products, cart_id= cart_id)
 
 
@@ -27,7 +27,16 @@ def webshop_home():
 def product_page(product_id):
     form = Product2CartForm()
     product = Product.query.get_or_404(product_id)
+    choices = []
+    for option in product.sellable_units:
+ #       setattr(form.product_sellable_unit.choices, str(option.id), option.reference)
+        choices.append((str(option.id),option.reference))
+        pass
+
+    form.product_sellable_unit.choices = choices
+
     if form.validate_on_submit():
-        add2cart(product_id = product_id, quantity = form.quantity.data)
+        
+        add2cart(product_sellable_unit_id = int(form.product_sellable_unit.data) , quantity = form.quantity.data)
 
     return render_template('webshop_product.html', title='Product', product=product, form = form)

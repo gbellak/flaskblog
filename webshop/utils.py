@@ -4,7 +4,7 @@ from os import urandom
 from flask import session, flash
 import uuid
 from flaskblog import db
-from flaskblog.models import Product, Cart, CartLineItem
+from flaskblog.models import Product, Cart, CartLineItem, Locale
 from flask_login import current_user
 
 def save_picture(product_picture):
@@ -21,6 +21,8 @@ def save_picture(product_picture):
     image.save(picture_path)
 
     return picture_fn
+
+
 
 def get_active_cart():
 #return active cart from session- or store a new one in db
@@ -46,22 +48,18 @@ def get_active_cart():
     
     return cart
 
-def add2cart(product_id, quantity):
+def add2cart(product_sellable_unit_id, quantity):
     cart = get_active_cart() #will return a new or existing (possibly saved) cart, stored in session
     #check if same product allready in cart, if so increment quantity
-    cart_line_item = CartLineItem.query.filter_by(cart_id = cart.id, product_id = product_id).first()
+    cart_line_item = CartLineItem.query.filter_by(cart_id = cart.id, product_sellable_unit_id = product_sellable_unit_id).first()
     if cart_line_item:
         cart_line_item.quantity += quantity
     else:
-        cart_line_item = CartLineItem(cart_id = cart.id, product_id = product_id, quantity = quantity)
+        cart_line_item = CartLineItem(cart_id = cart.id, product_sellable_unit_id = product_sellable_unit_id, quantity = quantity)
     
     db.session.add(cart_line_item)
     db.session.commit()
-
-    #debug
-    if current_user.is_authenticated:
-        flash('Current user id is: '+str(current_user.id), 'success')
-    
+  
     flash('Your product has been added to cart', 'success')
 
 def create_new_cart():
@@ -76,6 +74,8 @@ def create_new_cart():
     db.session.commit()
 
     session['cart_id'] = cart.id
+
+
 
     flash('New Cart created: '+str(cart.id) + 'for user: '+ str(owner_id), 'success')
     flash('Current user id is: '+str(owner_id), 'success')
@@ -152,6 +152,8 @@ def save_active_cart2user():
             db.session.add(cart)
             db.session.commit()
             session.pop('cart_id', None)
+
+
 
 
     

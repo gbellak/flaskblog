@@ -1,9 +1,5 @@
 (function($) {
 
-	// Add the view options functionality to all our views.
-//	Backbone.ViewOptions.add( Backbone.View.prototype );
-
-
 	var ShoppingCartLine = Backbone.Model.extend ({
 
 			defaults: function(){	
@@ -56,7 +52,7 @@
 			model:  ShoppingCartLine,
 
 			initialize: function(models, options){
-				this.url = '/api/shopping_cart/'+locale_slug+'/'+options.cart_id;
+				this.url = '/api/shopping_cart/'+options.locale_slug+'/'+options.cart_id;
 				this.check_out_url = '/orders/checkout/'+options.locale_slug+'/'+options.cart_id;
 
 				},
@@ -64,22 +60,16 @@
         });
 
 	var CartView = Backbone.View.extend({
-		
 
 					el: $('#cart-lines-container'),
 					initialize: function() {
 						this.collection.on('remove', this.render, this);
 						this.collection.on('change', this.render, this);
-//						this.locale_slug = options.locale_slug;					
-
-						
-						
 
 					},
 
 					events: {
 						'click .cart-save': 'cartSave',
-						'click .cart-checkout': 'cartCheckout',
 						
 					},
 
@@ -95,28 +85,15 @@
 
 						this.$el.append('<hr><button type="button" class="btn btn-info cart-save"  id="cart-save-button" >SaveCart</button>   '+
 
-										'<button type="button" class="btn btn-info cart-checkout"  id="cart-checkout-button" >CheckoutCart</button>'
+										'<a href="'+ this.collection.check_out_url +'" class="btn btn-success cart-save" + id="cart-checkout-button" >CheckOut</a>'
 							);
 						
 						return this;
 					},
 
 					cartSave: function(){
-
-
-
 						Backbone.sync('update', this.collection);
-						
-					},
-
-					cartCheckout: function(){
-						Backbone.sync('update', this.collection);
-						console.log('cart: ' + myCart + '   locale:  '+ this.locale_slug);
-						
-						setTimeout(function() {
-            							window.location.href = '/orders/checkout/se/4';
-        									}, 500);
-
+						console.log('updating');
 					},
 
 					cartTotal_Tax: function(){
@@ -197,13 +174,13 @@
 
 
 	$(document).ready(function() {
-		var shoppingCart = new ShoppingCart([],{cart_id: myCart}); //need myCart variable to be rendered on page
+		var shoppingCart = new ShoppingCart([],{cart_id: myCart, locale_slug:"se"}); //need myCart variable to be rendered on page
 
 		shoppingCart.fetch({
 			reset: true,
 			success: function(){
 						console.log(shoppingCart);
-						var shoppingCartView = new CartView({collection: shoppingCart});
+						var shoppingCartView = new CartView({collection: shoppingCart });
 						shoppingCartView.render();
 					},
 		});

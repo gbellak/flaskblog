@@ -7,7 +7,7 @@
             <div class="media-body ">
                 
                 <h2><a class="article-title" href="{{url_for('webshop.product_page',product_id = product.id)}}">{{ product.name }}</a></h2>
-                <p class="article-content">{{ product.unit_price }}</p>
+                <p class="article-content">{{ product.base_unit_price }}</p>
             </div>
         </article>
         {%endfor%}

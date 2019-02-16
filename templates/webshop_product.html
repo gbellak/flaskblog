@@ -8,10 +8,12 @@
         {{ form.hidden_tag() }}
         <fieldset class="form-group" >
           <legend class="border-bottom mb-4">{{ product.name }}</legend>
-          <p>Price : {{product.unit_price}} sek</p>
+          <p>Base Price : {{product.base_unit_price}} sek</p> 
           <br>
             
                 <div class="form-group">
+                    {{form.product_sellable_unit.label(class="form-control-label")}}
+                    {{form.product_sellable_unit}}
                     {{ form.quantity.label(class="form-control-label")}}
                         {%if form.quantity.errors%}
                               {{ form.quantity(class="form-control form-control-lg is-invalid")}}
