@@ -57,7 +57,7 @@
 
 			initialize: function(models, options){
 				this.url = '/api/shopping_cart/'+locale_slug+'/'+options.cart_id;
-				this.check_out_url = '/orders/checkout/'+options.locale_slug+'/'+options.cart_id;
+//				this.check_out_url = '/orders/checkout/'+options.locale_slug+'/'+options.cart_id;
 
 				},
 
@@ -111,11 +111,9 @@
 
 					cartCheckout: function(){
 						Backbone.sync('update', this.collection);
-						console.log('cart: ' + myCart + '   locale:  '+ this.locale_slug);
+						console.log('cart: ' + myCart + '   locale:  '+ locale_slug);
 						
-						setTimeout(function() {
-            							window.location.href = '/orders/checkout/se/4';
-        									}, 500);
+						setTimeout(function() {window.location.href = '/orders/checkout/'+ locale_slug+'/'+myCart;}, 500);
 
 					},
 

@@ -23,7 +23,6 @@ def save_picture(product_picture):
     return picture_fn
 
 
-
 def get_active_cart():
 #return active cart from session- or store a new one in db
     pop_or_takeover_not_owned_active_cart()
