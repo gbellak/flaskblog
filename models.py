@@ -264,6 +264,8 @@ class DiscountOffer(db.Model):
 
     discount = db.Column(db.Integer, nullable=False)
 
+    discounted_carts = db.relationship('Cart', backref='DiscountOffer', lazy=True)
+
     def __init__(self):
         self.usage_count = 0
 

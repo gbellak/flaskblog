@@ -29,10 +29,9 @@ def product_page(product_id):
     product = Product.query.get_or_404(product_id)
     choices = []
     for option in product.sellable_units:
- #       setattr(form.product_sellable_unit.choices, str(option.id), option.reference)
         choices.append((str(option.id),option.reference))
-        pass
 
+    
     form.product_sellable_unit.choices = choices
 
     if form.validate_on_submit():

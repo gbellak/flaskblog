@@ -106,7 +106,7 @@
 
 
 
-<!-- Modal -->
+<!-- Cart Modal -->
           <div class="modal fade " id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
               <div class="modal-content">
@@ -117,6 +117,7 @@
                   </button>
                 </div>
                 <div class="modal-body">
+                  <div class="content-section" id="cart-discount-container"></div>
                   <div class="content-section" id="cart-lines-container"></div>
               </div>
 
@@ -155,6 +156,21 @@
                 <span> | <a href="#" class="remove_item">Delete</a></span>
     </script>
 
+    <script type="text/template" id="CartDiscount-template">
+      <button type="button" class="btn btn-outline-info btn-sm  cart-discount"  id="cart-checkout-button" >Discount code</button>
+         <input id="discount-input-field" type="text" value="<%= discountCode %> "> <%= description %>
+    </script>
+<!-- Passing some variables from server to javascript -->    
+    
+    <script> 
+    var myCart;
+    var locale_slug = 'se'
+
+    {% if session['cart_id'] %}
+      myCart = {{ session['cart_id'] }}; 
+   {% endif %}
+    </script>
+
 
 <!-- Optional JavaScript -->
     <script src="{{url_for('static',filename = 'js/backbone/jquery-3.3.1.min.js')}}"></script>
@@ -173,13 +189,9 @@
 
     <script src="{{url_for('static',filename = 'js/app/cart.js')}}"></script>
 
-<!-- Passing some variables from server to javascript -->    
-    <script> var myCart = {{ session['cart_id'] }}; 
-            var locale_slug = 'se'    //{{ session['locale_slug'] }}; ---not sure how to pass value to javascript
-   //passing active cart id and locale to javascript to use </script>
 
-    
-    {% block javascript %}{% endblock %}
+   
+   {% block javascript %}{% endblock %}
 
   </body>
 </html>

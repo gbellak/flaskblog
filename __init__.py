@@ -25,10 +25,10 @@ mail = Mail()
 api = Api()
 ma = Marshmallow()
 
-from flaskblog.rest.resources import ShoppingCart, ShoppingCartLine
+from flaskblog.rest.resources import ShoppingCart, ShoppingCartLine, CartDiscountOffer
 api.add_resource(ShoppingCart, '/api/shopping_cart/<string:locale_slug>/<int:id>')
 api.add_resource(ShoppingCartLine, '/api/shopping_cart/<string:locale_slug>/<int:cart_id>/<int:id>')
-
+api.add_resource(CartDiscountOffer,  '/api/shopping_cart/discount_offer/<int:cart_id>')
 
 
 

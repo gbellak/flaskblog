@@ -2,7 +2,60 @@
 
 	// Add the view options functionality to all our views.
 //	Backbone.ViewOptions.add( Backbone.View.prototype );
+	var DiscountOffer = Backbone.Model.extend ({
+			url : '/api/shopping_cart/discount_offer/' + myCart.toString(),
 
+			defaults: function(){	
+				return {
+						discountCode:"",
+						description:"",
+		                discount: 0,
+		                valid_regular_price_only: true,
+		                }
+					},
+
+	});
+
+	var CartDiscountView = Backbone.View.extend({
+
+					
+
+					el: $('#cart-discount-container'),
+
+					events: {
+        						'click .cart-discount': 'cartDiscountUpdate',
+        					},
+
+					initialize: function() {
+						this.template = _.template($('#CartDiscount-template').html());
+						this.model.on('change', this.render, this);
+					},
+
+					render: function(){
+						this.$el.html(this.template(this.model.toJSON()) );
+        				return this;
+					},
+
+
+					cartDiscountUpdate: function(){
+						this.model.set({discountCode: $('#discount-input-field').val()});
+						this.model.save(null, {
+							success: function(){
+								console.log('success!!!');
+								},
+
+							error: function(){
+								console.log('error !!!!!');
+								this.model.set({discountCode: "x"});
+								this.render();
+							},
+						});
+
+
+					},
+
+
+					   });
 
 	var ShoppingCartLine = Backbone.Model.extend ({
 
@@ -93,9 +146,9 @@
 
 						this.$el.append('<hr><h5>Cart Total: ' + this.cartTotal() +'  kr  |  VAT Total: ' + this.cartTotal_Tax() + ' kr  |  Discount Total: ' + this.cartTotal_Discount()+'kr</h5>').html();
 
-						this.$el.append('<hr><button type="button" class="btn btn-info cart-save"  id="cart-save-button" >SaveCart</button>   '+
+						this.$el.append('<hr><button type="button" class="btn btn-outline-info btn-sm cart-save"  id="cart-save-button" >SaveCart</button>   '+
 
-										'<button type="button" class="btn btn-info cart-checkout"  id="cart-checkout-button" >CheckoutCart</button>'
+										'<button type="button" class="btn btn-success btn-sm cart-checkout"  id="cart-checkout-button" >CheckoutCart</button>'
 							);
 						
 						return this;
@@ -195,6 +248,7 @@
 
 
 	$(document).ready(function() {
+		if(myCart){
 		var shoppingCart = new ShoppingCart([],{cart_id: myCart}); //need myCart variable to be rendered on page
 
 		shoppingCart.fetch({
@@ -206,6 +260,18 @@
 					},
 		});
 
-	});
+		var cartDiscount = new DiscountOffer();
+		var cartDiscountView = new CartDiscountView({model: cartDiscount});
 
+		cartDiscount.fetch({
+				reset: true,
+				success: function(){
+						console.log(cartDiscount);
+						
+						cartDiscountView.render();
+						}
+				});
+
+		
+		}});
 })(jQuery);

@@ -130,7 +130,7 @@ def merge_saved_to_active_cart():
 
         else: 
             for line_item in old_cart_line_items:
-                add2cart(line_item.product_id, line_item.quantity)
+                add2cart(line_item.product_sellable_unit_id, line_item.quantity)
 
             old_cart.is_closed = True
 
